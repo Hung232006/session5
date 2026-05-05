@@ -1,1 +1,38 @@
-
+SELECT 
+    c.customer_name AS "Ten khach hang",
+    o.order_date AS "Ngay dat hang",
+    o.total_amount AS "Tong tien"
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id;
+SELECT 
+    SUM(total_amount) AS "Tong doanh thu",
+    AVG(total_amount) AS "Trung binh don hang",
+    MAX(total_amount) AS "Don hang lon nhat",
+    MIN(total_amount) AS "Don hang nho nhat",
+    COUNT(order_id) AS "So luong don hang"
+FROM orders;
+SELECT 
+    c.city,
+    SUM(o.total_amount) AS "Doanh thu"
+FROM orders o
+JOIN customers c ON o.customer_id = c.customer_id
+GROUP BY c.city
+HAVING SUM(o.total_amount) > 10000;
+SELECT 
+    c.customer_name,
+    o.order_date,
+    oi.product_id,
+    oi.quantity,
+    oi.price
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+JOIN order_items oi ON o.order_id = oi.order_id;
+SELECT customer_name
+FROM customers
+WHERE customer_id = (
+    SELECT customer_id
+    FROM orders
+    GROUP BY customer_id
+    ORDER BY SUM(total_amount) DESC
+    LIMIT 1
+);
